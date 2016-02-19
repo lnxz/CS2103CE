@@ -9,6 +9,8 @@ import java.io.PrintWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class TextBuddy {
@@ -62,6 +64,7 @@ public class TextBuddy {
 				break;
 
 			case "display":
+				functionSort(fileName);
 				functionDisplay(fileName);
 				break;
 
@@ -83,6 +86,40 @@ public class TextBuddy {
 		}
 	}
 
+	// Function to sort the lines of the file
+	public static void functionSort(String fileName) throws IOException
+	{
+		String stringLine;
+		ArrayList<String> stringArr = new ArrayList<String>();
+		int lineCount = 0;
+
+		FileInputStream in = new FileInputStream(fileName);
+		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+		
+		// Loop to print out the lines as well as the associated line number
+		while ((stringLine = reader.readLine()) != null) {
+			stringArr.add(stringLine);
+			lineCount++;
+		}
+		Collections.sort(stringArr);
+
+		BufferedWriter fw = new BufferedWriter(new FileWriter(fileName));
+		
+		// If the line number matches, ignore the line and save it into stringDeleted, else write it to the buffer
+		for (int x = 0; x < lineCount; x++)
+		{
+			fw.write(stringArr.get(x));
+			if(x != (lineCount -1))
+			{
+				fw.newLine();
+			}
+		}
+		
+		fw.close();
+
+		reader.close();
+	}
+	
 	// Printing of welcome message
 	public static void printWelcomeMsg(String fileName) {
 		printMsg("Welcome to TextBuddy. " + fileName + " is ready for use");
@@ -103,13 +140,11 @@ public class TextBuddy {
 		String stringLine;
 		String stringDeleted = "";
 		int currLine = 1;
-		
-		// Extract out the index of the line to be deleted
-		int deletionIndex = Integer.parseInt(splitString[1]);
-		
-		// Initializing BufferedReader and StringBuffer 
 		BufferedReader br = new BufferedReader(new FileReader(fileName));
 		StringBuffer sb = new StringBuffer("");
+		
+		// Extract out the index of the line to be deleted
+		int deletionIndex = Integer.parseInt(splitString[1]);	
 
 		// If the line number matches, ignore the line and save it into stringDeleted, else write it to the buffer
 		while ((stringLine = br.readLine()) != null) {
@@ -122,27 +157,29 @@ public class TextBuddy {
 		}
 		br.close();
 
-		// Transfer buffer into the file
+		writeFileFromBuffer(fileName, sb);
+		printMsg("deleted from " + fileName + ": \"" + stringDeleted + "\"");
+	}
+
+	private static void writeFileFromBuffer(String fileName, StringBuffer sb) throws IOException {
 		FileWriter fw = new FileWriter(new File(fileName));
 		fw.write(sb.toString());
 		fw.close();
-
-		printMsg("deleted from " + fileName + ": \"" + stringDeleted + "\"");
 	}
 
 	// Function to display text from file, with line number appended to the front of each line
 	private static void functionDisplay(String fileName) throws FileNotFoundException, IOException {
 		
-		String stringLine;
+		String lineOfText;
 		int lineCounter = 0;
 		
 		FileInputStream in = new FileInputStream(fileName);
 		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 		
 		// Loop to print out the lines as well as the associated line number
-		while ((stringLine = reader.readLine()) != null) {
+		while ((lineOfText = reader.readLine()) != null) {
 			lineCounter++;
-			printMsg(lineCounter + ": " + stringLine);
+			printMsg(lineCounter + ": " + lineOfText);
 		}
 		
 		// If file is empty, show corresponding message
@@ -173,7 +210,7 @@ public class TextBuddy {
 	}
 
 	// Function to split string by spaces and save into a string array
-	private static String[] splitStringBySpaces(String userCommand) {
+	public static String[] splitStringBySpaces(String userCommand) {
 		
 		String[] splitString;
 		
