@@ -55,14 +55,16 @@ public class TextBuddyTest {
 		
 		// Preparing test case to test function
 		String[] args =  {"tempText.txt"};
-		
 		TextBuddy.initializeFile(args);
 		String result =  outContent.toString();
+				
+		// Expected output/file to compare to 
+		String expectedOutput = "Welcome to TextBuddy. tempText.txt is ready for use\r\n";
 		
 		// Check output
-		
+		Assert.assertEquals("Output differs", expectedOutput, result);		
 		// Check if file exists
-		Assert.assertTrue(testFile.exists());
+		Assert.assertTrue(new File("tempText.txt").exists());
 	}
 	
 	@Test
