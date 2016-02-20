@@ -17,29 +17,27 @@ public class TextBuddy {
 
 	public static void main(String[] args) throws IOException {
 
-		// Initialize scanner
-		Scanner scanner = new Scanner(System.in);
-
 		// Initialize file & print welcome message
 		File file = initializeFile(args);
 
 		// Executes the menu & functions in a loop
-		executeMenuLoop(file, scanner);
+		executeMenuLoop(file);
 
 	}
 
 	// **************** Main functionality functions **************************
 
 	// Function to execute the main menu within a while loop
-	private static void executeMenuLoop(File file, Scanner scanner) throws IOException, FileNotFoundException {
-
+	private static void executeMenuLoop(File file) throws IOException, FileNotFoundException {
+		
+		Scanner scanner = new Scanner(System.in);		
 		String userCommand;
 		String[] splitString;
 
 		// Scan for first command
 		userCommand = scanLine(scanner);
 
-		// While loop runs until "exit"
+		// While loop runs until command = "exit"
 		while (!userCommand.equals("exit")) {
 
 			// Extracts command from a line (first word)
@@ -75,6 +73,7 @@ public class TextBuddy {
 					printMsg("Invalid Command");
 					break;
 			}
+			// Next command
 			userCommand = scanLine(scanner);
 		}
 	}
@@ -100,9 +99,10 @@ public class TextBuddy {
 		
 		// Rewrite the newly sorted arrayList into the file
 		BufferedWriter fw = new BufferedWriter(new FileWriter(file));
-		for (int x = 0; x < lineCount; x++) {
-			fw.write(stringArr.get(x));
-			if (x != (lineCount - 1)) {
+		for (int idx = 0; idx < lineCount; idx++) {
+			fw.write(stringArr.get(idx));
+			// Append a new line if not at last line
+			if (idx != (lineCount - 1)) {
 				fw.newLine();
 			}
 		}

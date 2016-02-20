@@ -17,20 +17,20 @@ public class TextBuddyTest {
 	
 	// ***************** Helper Methods ************************************
 	
-	//Following few methods are used to test output stream (console output)
+	// Following section is used to test output stream (console output)
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-
+	
 	@Before
 	public void setUpStreams() {
 	    System.setOut(new PrintStream(outContent));
 	}
-
+	
 	@After
 	public void cleanUpStreams() {
 	    System.setOut(null);
 	}
 	
-	//To create a dummy test file for some of the tests
+	// To create a dummy test file for some of the tests
 	private File initTestFile(String fileName) throws IOException {
 		File testFile = new File(fileName);		
 		BufferedWriter fw = new BufferedWriter(new FileWriter(testFile));
