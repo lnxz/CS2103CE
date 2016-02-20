@@ -84,21 +84,23 @@ public class TextBuddy {
 	public static String functionSort(File file) throws IOException {
 		String stringLine;
 		ArrayList<String> stringArr = new ArrayList<String>();
-		int lineCount = 0;
 
-		FileInputStream in = new FileInputStream(file);
-		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
 
-		// Loop to count number of lines
+		// Add the lines into an arraylist
 		while ((stringLine = reader.readLine()) != null) {
 			stringArr.add(stringLine);
-			lineCount++;
 		}
+		reader.close();
+		
+		// Sort the arraylist of lines
 		Collections.sort(stringArr);
-		BufferedWriter fw = new BufferedWriter(new FileWriter(file));
+		
 
-		// If the line number matches, ignore the line and save it into
-		// stringDeleted, else write it to the buffer
+		int lineCount = getNumLines(file);
+		
+		// Rewrite the newly sorted arrayList into the file
+		BufferedWriter fw = new BufferedWriter(new FileWriter(file));
 		for (int x = 0; x < lineCount; x++) {
 			fw.write(stringArr.get(x));
 			if (x != (lineCount - 1)) {
@@ -106,7 +108,7 @@ public class TextBuddy {
 			}
 		}
 		fw.close();
-		reader.close();
+		
 
 		return "Successfully sorted " + lineCount + " lines";
 	}
@@ -252,7 +254,22 @@ public class TextBuddy {
 		printMsg("Welcome to TextBuddy. " + fileName + " is ready for use");
 		return file;
 	}
+	
+	// Function to get number of lines of the file
+	public static int getNumLines(File file) throws IOException {
+	
+		int lineCount = 0;
+		FileInputStream in = new FileInputStream(file);
+		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
+		// Loop to count number of lines
+		while ((reader.readLine()) != null) {
+			lineCount++;
+		}
+		reader.close();		
+		return lineCount;
+	}
+	
 	private static void printMsg(String msg) {
 		System.out.println(msg);
 	}
