@@ -33,7 +33,6 @@ public class TextBuddy {
 	// Function to execute the main menu within a while loop
 	private static void executeMenuLoop(File file, Scanner scanner) throws IOException, FileNotFoundException {
 
-		// Declaring some local variables
 		String userCommand;
 		String[] splitString;
 
@@ -87,13 +86,13 @@ public class TextBuddy {
 
 		BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
 
-		// Add the lines into an arraylist
+		// Add the lines into an arrayList
 		while ((stringLine = reader.readLine()) != null) {
 			stringArr.add(stringLine);
 		}
 		reader.close();
 		
-		// Sort the arraylist of lines
+		// Sort the arrayList of lines
 		Collections.sort(stringArr);
 		
 
@@ -127,25 +126,25 @@ public class TextBuddy {
 		String stringLine;
 		String stringDeleted = "";
 		int currLine = 1;
-		BufferedReader br = new BufferedReader(new FileReader(file));
-		StringBuffer sb = new StringBuffer("");
+		BufferedReader reader = new BufferedReader(new FileReader(file));
+		StringBuffer buffer = new StringBuffer("");
 
 		// Extract out the index of the line to be deleted
 		int deletionIndex = Integer.parseInt(splitString[1]);
 
 		// If the line number matches, ignore the line and save it into
 		// stringDeleted, else write it to the buffer
-		while ((stringLine = br.readLine()) != null) {
+		while ((stringLine = reader.readLine()) != null) {
 			if (deletionIndex != currLine) {
-				sb.append(stringLine + "\n");
+				buffer.append(stringLine + "\n");
 			} else {
 				stringDeleted = stringLine;
 			}
 			currLine++;
 		}
-		br.close();
+		reader.close();
 
-		writeFileFromBuffer(file, sb);
+		writeFileFromBuffer(file, buffer);
 		return "deleted from " + file.getName() + ": \"" + stringDeleted + "\"";
 	}
 
@@ -199,12 +198,12 @@ public class TextBuddy {
 		String stringLine;
 		int lineCounter = 1;
 		int linesFound = 0;
-		BufferedReader br = new BufferedReader(new FileReader(file));
+		BufferedReader reader = new BufferedReader(new FileReader(file));
 		String searchWord = splitString[1];
 
 		// If word is found, print out the line and its corresponding line number 
 		// Also increment linesFound to tabulate instances of the word found
-		while ((stringLine = br.readLine()) != null) {
+		while ((stringLine = reader.readLine()) != null) {
 			if (stringLine.contains(searchWord)) {
 				printMsg(lineCounter + ": " + stringLine);
 				linesFound++;
@@ -212,7 +211,7 @@ public class TextBuddy {
 			lineCounter++;
 		}
 
-		br.close();
+		reader.close();
 		
 		if (linesFound == 0) {
 			return "Unable to find " + searchWord;
