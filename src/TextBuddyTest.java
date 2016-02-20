@@ -54,8 +54,12 @@ public class TextBuddyTest {
 	public void testInitializeFile() throws IOException{
 		
 		// Preparing test case to test function
-		File testFile = new File("tempInit.txt");
-		TextBuddy.initializeFile(testFile);
+		String[] args =  {"tempText.txt"};
+		
+		TextBuddy.initializeFile(args);
+		String result =  outContent.toString();
+		
+		// Check output
 		
 		// Check if file exists
 		Assert.assertTrue(testFile.exists());

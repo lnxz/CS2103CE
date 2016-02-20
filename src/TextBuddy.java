@@ -21,15 +21,8 @@ public class TextBuddy {
 		// Initialize scanner
 		Scanner scanner = new Scanner(System.in);
 
-		// Getting the file name from argument
-		String fileName = getFileName(args);
-		File file = new File(fileName);
-
-		// Creates file if file does not exist
-		initializeFile(file);
-
-		// Prints welcome message
-		printWelcomeMsg(fileName);
+		// Initialize file & print welcome message
+		File file = initializeFile(args);
 
 		// Executes the menu & functions in a loop
 		executeMenuLoop(file, scanner);
@@ -61,7 +54,7 @@ public class TextBuddy {
 
 			switch (splitString[0]) {
 			case "add":
-				functionAdd(file, splitString);
+				printMsg(functionAdd(file, splitString));
 				break;
 
 			case "display":
@@ -69,19 +62,19 @@ public class TextBuddy {
 				break;
 
 			case "delete":
-				functionDelete(file, splitString);
+				printMsg(functionDelete(file, splitString));
 				break;
 
 			case "clear":
-				functionClear(file);
+				printMsg(functionClear(file));
 				break;
 				
 			case "sort":
-				functionSort(file);
+				printMsg(functionSort(file));
 				break;
 				
 			case "search":
-				functionSearch(file,splitString);
+				printMsg(functionSearch(file,splitString));
 				break;
 			
 			default:
@@ -125,11 +118,6 @@ public class TextBuddy {
 		reader.close();
 		
 		return "Successfully sorted " + lineCount + " lines";
-	}
-	
-	// Printing of welcome message
-	public static void printWelcomeMsg(String fileName) {
-		printMsg("Welcome to TextBuddy. " + fileName + " is ready for use");
 	}
 
 	// Function to clear the text file 
@@ -253,11 +241,18 @@ public class TextBuddy {
 		return splitString;
 	}
 
-	// Function to create the file if specified does not exist
-	public static void initializeFile(File file) throws IOException {
+	// Function to create the file if specified does not exist & print welcome message
+	public static File initializeFile(String[] args) throws IOException {
+		String fileName = getFileName(args);
+		File file = new File(fileName);
+		
 		if (!file.exists()) {
 			file.createNewFile();
 		}
+		
+		// welcome Message
+		printMsg("Welcome to TextBuddy. " + fileName + " is ready for use");
+		return file;
 	}
 
 	private static void printMsg(String msg) {
