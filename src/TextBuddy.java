@@ -94,7 +94,7 @@ public class TextBuddy {
 	}
 
 	// Function to sort the lines of the file
-	public static void functionSort(File file) throws IOException
+	public static String functionSort(File file) throws IOException
 	{
 		String stringLine;
 		ArrayList<String> stringArr = new ArrayList<String>();
@@ -121,10 +121,10 @@ public class TextBuddy {
 				fw.newLine();
 			}
 		}
-		
 		fw.close();
-
 		reader.close();
+		
+		return "Successfully sorted " + lineCount + " lines";
 	}
 	
 	// Printing of welcome message
@@ -133,15 +133,15 @@ public class TextBuddy {
 	}
 
 	// Function to clear the text file 
-	public static void functionClear(File file) throws FileNotFoundException {
+	public static String functionClear(File file) throws FileNotFoundException {
 		PrintWriter pw = new PrintWriter(file);
 		pw.close();
 
-		printMsg("all content deleted from " + file.getName());
+		return "all content deleted from " + file.getName();
 	}
 
 	// Function to delete a specific line from the text file
-	public static void functionDelete(File file, String[] splitString)
+	public static String functionDelete(File file, String[] splitString)
 			throws FileNotFoundException, IOException {
 		
 		String stringLine;
@@ -165,7 +165,7 @@ public class TextBuddy {
 		br.close();
 
 		writeFileFromBuffer(file, sb);
-		printMsg("deleted from " + file.getName() + ": \"" + stringDeleted + "\"");
+		return "deleted from " + file.getName() + ": \"" + stringDeleted + "\"";
 	}
 
 	// Function to display text from file, with line number appended to the front of each line
@@ -191,7 +191,7 @@ public class TextBuddy {
 	}
 
 	// Function to append a line to the end of the file
-	public static void functionAdd(File file, String[] splitString) throws IOException {
+	public static String functionAdd(File file, String[] splitString) throws IOException {
 		
 		BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
 		StringBuilder builder = new StringBuilder();
@@ -203,11 +203,12 @@ public class TextBuddy {
 			}
 			builder.append(splitString[i]);
 		}
-		
-		printMsg("added to " + file.getName() + ": \"" + builder.toString() + "\"");
+
 		writer.write(builder.toString());
 		writer.write("\n");
 		writer.close();
+		
+		return "added to " + file.getName() + ": \"" + builder.toString() + "\"";
 	}
 
 	// Function to delete a specific line from the text file

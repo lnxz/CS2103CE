@@ -52,23 +52,36 @@ public class TextBuddyTest {
 	// ******************** Public Method tests *************************************
 	@Test
 	public void testInitializeFile() throws IOException{
+		
+		// Preparing test case to test function
 		File testFile = new File("tempInit.txt");
 		TextBuddy.initializeFile(testFile);
-		Assert.assertTrue("File exists", testFile.exists());
+		
+		// Check if file exists
+		Assert.assertTrue(testFile.exists());
 	}
 	
 	@Test
 	public void testSplitStringBySpaces()
 	{
-		String unsplitString = "add little brown fox";
-		String[] expectedString = {"add","little","brown","fox"};
+		// Preparing test case to test function
+		String unsplitString = "add little brown fox";		
 		String[] splitString = TextBuddy.splitStringBySpaces(unsplitString);
+		
+		// Expected output/file to compare to 
+		String[] expectedString = {"add","little","brown","fox"};
+		
+		// Check output
 		Assert.assertArrayEquals("Strings are not the same",expectedString, splitString);
 	}
 	
 	@Test
 	public void testGetFileName() {
+		
+		// Expected output/file to compare to 
 		String[] args =  {"tempText.txt"};
+		
+		// Check output
 		Assert.assertEquals(args[0],TextBuddy.getFileName(args));
 	}
 	
@@ -76,7 +89,6 @@ public class TextBuddyTest {
 	public void testFunctionAdd() throws IOException{
 		String fileName = "tempAdd.txt";
 		String[] splitString = {"add","little","brown","fox"};
-		String expectedOutput = "added to tempAdd.txt: \"little brown fox\"\r\n";
 				
 		// Clear the file every time this test is run to start with a clean file
 		PrintWriter pw = new PrintWriter(fileName);
@@ -84,15 +96,15 @@ public class TextBuddyTest {
 		
 		// Preparing test file to test function
 		File testFile = new File(fileName);
-		TextBuddy.functionAdd(testFile, splitString);
 		
 		// Expected output/file to compare to 
-		File expected = new File("testAdd.txt");		
+		File expectedFile = new File("testAdd.txt");	
+		String expectedOutput = "added to tempAdd.txt: \"little brown fox\"";
 		
 		// Check output
-		Assert.assertEquals(expectedOutput, outContent.toString());
+		Assert.assertEquals("Output differs", expectedOutput, TextBuddy.functionAdd(testFile, splitString));
 		// Check file contents 
-		Assert.assertEquals(FileUtils.readLines(expected), FileUtils.readLines(testFile));
+		Assert.assertEquals("File differs", FileUtils.readLines(expectedFile), FileUtils.readLines(testFile));
 	}
 	
 	@Test
@@ -101,61 +113,86 @@ public class TextBuddyTest {
 		// Preparing test file to test function
 		String fileName = "tempSort.txt";
 		File testFile = initTestFile(fileName);
-		TextBuddy.functionSort(testFile);
-		
+	
 		// Expected output/file to compare to 
-		File expected = new File("testSort.txt");
+		File expectedFile = new File("testSort.txt");
+		String expectedOutput = "Successfully sorted 4 lines";
 
-		Assert.assertEquals(FileUtils.readLines(testFile), FileUtils.readLines(expected));
+		// Check output
+		Assert.assertEquals("Output differs", expectedOutput, TextBuddy.functionSort(testFile));		
+		// Check file contents 
+		Assert.assertEquals("File differs", FileUtils.readLines(testFile), FileUtils.readLines(expectedFile));
 	}
 	
 	@Test
 	public void testFunctionClear() throws IOException
 	{
+		// Preparing test file to test function
 		String fileName = "tempClear.txt";
 		File testFile = initTestFile(fileName);		
-		File expected = new File("testClear.txt");
 		
-		TextBuddy.functionClear(testFile);
-		Assert.assertEquals(FileUtils.readLines(expected), FileUtils.readLines(testFile));
+		// Expected output/file to compare to
+		File expectedFile = new File("testClear.txt");
+		String expectedOutput = "all content deleted from tempClear.txt";
+		
+		// Check output
+		Assert.assertEquals("Output differs", expectedOutput, TextBuddy.functionClear(testFile));		
+		
+		// Check file contents 
+		Assert.assertEquals("File differs", FileUtils.readLines(expectedFile), FileUtils.readLines(testFile));
 	}
 	
 	@Test
 	public void testFunctionDelete() throws IOException
 	{
+		// Preparing test file to test function
 		String fileName = "tempDel.txt";
-		File testFile = initTestFile(fileName);	
-		File expected = new File("testDel.txt");
+		File testFile = initTestFile(fileName);			
 		String[] splitString = {"delete","4"};
 		
-		TextBuddy.functionDelete(testFile, splitString);
-		Assert.assertEquals(FileUtils.readLines(expected), FileUtils.readLines(testFile));
+		// Expected output/file to compare to
+		File expectedFile = new File("testDel.txt");		
+		String expectedOutput = "deleted from tempDel.txt: \"banana\"";
+		
+		// Check output
+		Assert.assertEquals("Output differs", expectedOutput, TextBuddy.functionDelete(testFile, splitString));	
+		
+		// Check file contents 
+		Assert.assertEquals("File differs", FileUtils.readLines(expectedFile), FileUtils.readLines(testFile));
 	}
 	
 	@Test
 	public void testFunctionDisplay() throws IOException
 	{
+		// Preparing test file to test function
 		String fileName = "tempDisp.txt";
 		File testFile = initTestFile(fileName);	
 		TextBuddy.functionDisplay(testFile);
-		String expected = "1: potato\r\n2: coconut\r\n3: ashtray\r\n4: banana\r\n";
 		String result =  outContent.toString();
-	    Assert.assertEquals(expected, result);
+		
+		// Expected output/file to compare to
+		String expected = "1: potato\r\n2: coconut\r\n3: ashtray\r\n4: banana\r\n";
+		
+		// Check output
+	    Assert.assertEquals("Output differs", expected, result);
 	}
 	
 	@Test
 	public void testFunctionSearch() throws IOException 
 	{
+		// Preparing test file to test function
 		String fileName = "tempSearch.txt";
 		File testFile = initTestFile(fileName);	
-		
 		String[] testLine1 = {"search","banana"};
 		String[] testLine2 = {"search","notbanana"};
+		
+		// Expected output/file to compare to
 		String expectedLine1 = "Found 1 instance(s) of the word banana";
 		String expectedLine2 = "Unable to find notbanana";
 		
-		Assert.assertEquals(expectedLine1, TextBuddy.functionSearch(testFile, testLine1));
-		Assert.assertEquals(expectedLine2, TextBuddy.functionSearch(testFile, testLine2));
+		// Check output
+		Assert.assertEquals("Output differs ( found case )", expectedLine1, TextBuddy.functionSearch(testFile, testLine1));
+		Assert.assertEquals("Output differs ( not found case )", expectedLine2, TextBuddy.functionSearch(testFile, testLine2));
 		
 	}
 	
