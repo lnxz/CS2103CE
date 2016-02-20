@@ -142,8 +142,7 @@ public class TextBuddyTest {
 		String expectedOutput = "all content deleted from tempClear.txt";
 		
 		// Check output
-		Assert.assertEquals("Output differs", expectedOutput, TextBuddy.functionClear(testFile));		
-		
+		Assert.assertEquals("Output differs", expectedOutput, TextBuddy.functionClear(testFile));
 		// Check file contents 
 		Assert.assertEquals("File differs", FileUtils.readLines(expectedFile), FileUtils.readLines(testFile));
 	}
@@ -162,7 +161,6 @@ public class TextBuddyTest {
 		
 		// Check output
 		Assert.assertEquals("Output differs", expectedOutput, TextBuddy.functionDelete(testFile, splitString));	
-		
 		// Check file contents 
 		Assert.assertEquals("File differs", FileUtils.readLines(expectedFile), FileUtils.readLines(testFile));
 	}
@@ -193,7 +191,7 @@ public class TextBuddyTest {
 		String[] testLine2 = {"search","notbanana"};
 		
 		// Expected output/file to compare to
-		String expectedLine1 = "Found 1 instance(s) of the word banana";
+		String expectedLine1 = "Found 1 line(s) containing the word banana";
 		String expectedLine2 = "Unable to find notbanana";
 		
 		// Check output
