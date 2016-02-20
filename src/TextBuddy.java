@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
 
+
 public class TextBuddy {
 
 	public static void main(String[] args) throws IOException {
@@ -31,7 +32,7 @@ public class TextBuddy {
 		printWelcomeMsg(fileName);
 
 		// Executes the menu & functions in a loop
-		executeMenuLoop(fileName, scanner);
+		executeMenuLoop(file, scanner);
 
 	}
 
@@ -43,7 +44,7 @@ public class TextBuddy {
 	}
 
 	// Function to execute the main menu within a while loop
-	private static void executeMenuLoop(String fileName, Scanner scanner) throws IOException, FileNotFoundException {
+	private static void executeMenuLoop(File file, Scanner scanner) throws IOException, FileNotFoundException {
 		
 		// Declaring some local variables
 		String userCommand;
@@ -60,40 +61,46 @@ public class TextBuddy {
 
 			switch (splitString[0]) {
 			case "add":
-				functionAdd(fileName, splitString);
+				functionAdd(file, splitString);
 				break;
 
 			case "display":
-				functionSort(fileName);
-				functionDisplay(fileName);
+				functionDisplay(file);
 				break;
 
 			case "delete":
-				functionDelete(fileName, splitString);
+				functionDelete(file, splitString);
 				break;
 
 			case "clear":
-				functionClear(fileName);
+				functionClear(file);
 				break;
-
+				
+			case "sort":
+				functionSort(file);
+				break;
+				
+			case "search":
+				functionSearch(file,splitString);
+				break;
+			
 			default:
 				printMsg("Invalid Command");
 				break;
 			}
 			
-			// Take in next command
 			userCommand = scanLine(scanner);
 		}
 	}
 
 	// Function to sort the lines of the file
-	public static void functionSort(String fileName) throws IOException
+	public static void functionSort(File file) throws IOException
 	{
 		String stringLine;
 		ArrayList<String> stringArr = new ArrayList<String>();
 		int lineCount = 0;
 
-		FileInputStream in = new FileInputStream(fileName);
+		FileInputStream in = new FileInputStream(file);
 		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 		
 		// Loop to print out the lines as well as the associated line number
@@ -103,7 +110,7 @@ public class TextBuddy {
 		}
 		Collections.sort(stringArr);
 
-		BufferedWriter fw = new BufferedWriter(new FileWriter(fileName));
+		BufferedWriter fw = new BufferedWriter(new FileWriter(file));
 		
 		// If the line number matches, ignore the line and save it into stringDeleted, else write it to the buffer
 		for (int x = 0; x < lineCount; x++)
@@ -126,21 +133,21 @@ public class TextBuddy {
 	}
 
 	// Function to clear the text file 
-	private static void functionClear(String fileName) throws FileNotFoundException {
-		PrintWriter pw = new PrintWriter(fileName);
+	public static void functionClear(File file) throws FileNotFoundException {
+		PrintWriter pw = new PrintWriter(file);
 		pw.close();
 
-		printMsg("all content deleted from " + fileName);
+		printMsg("all content deleted from " + file.getName());
 	}
 
 	// Function to delete a specific line from the text file
-	private static void functionDelete(String fileName, String[] splitString)
+	public static void functionDelete(File file, String[] splitString)
 			throws FileNotFoundException, IOException {
 		
 		String stringLine;
 		String stringDeleted = "";
 		int currLine = 1;
-		BufferedReader br = new BufferedReader(new FileReader(fileName));
+		BufferedReader br = new BufferedReader(new FileReader(file));
 		StringBuffer sb = new StringBuffer("");
 		
 		// Extract out the index of the line to be deleted
@@ -157,23 +164,17 @@ public class TextBuddy {
 		}
 		br.close();
 
-		writeFileFromBuffer(fileName, sb);
-		printMsg("deleted from " + fileName + ": \"" + stringDeleted + "\"");
-	}
-
-	private static void writeFileFromBuffer(String fileName, StringBuffer sb) throws IOException {
-		FileWriter fw = new FileWriter(new File(fileName));
-		fw.write(sb.toString());
-		fw.close();
+		writeFileFromBuffer(file, sb);
+		printMsg("deleted from " + file.getName() + ": \"" + stringDeleted + "\"");
 	}
 
 	// Function to display text from file, with line number appended to the front of each line
-	private static void functionDisplay(String fileName) throws FileNotFoundException, IOException {
+	public static void functionDisplay(File file) throws FileNotFoundException, IOException {
 		
 		String lineOfText;
 		int lineCounter = 0;
 		
-		FileInputStream in = new FileInputStream(fileName);
+		FileInputStream in = new FileInputStream(file);
 		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 		
 		// Loop to print out the lines as well as the associated line number
@@ -184,15 +185,15 @@ public class TextBuddy {
 		
 		// If file is empty, show corresponding message
 		if (lineCounter == 0) {
-			printMsg(fileName + " is empty");
+			printMsg(file.getName() + " is empty");
 		}
 		reader.close();
 	}
 
 	// Function to append a line to the end of the file
-	public static void functionAdd(String fileName, String[] splitString) throws IOException {
+	public static void functionAdd(File file, String[] splitString) throws IOException {
 		
-		BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true));
+		BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
 		StringBuilder builder = new StringBuilder();
 
 		// Using string builder to append line to end of file, excluding the command given
@@ -203,25 +204,52 @@ public class TextBuddy {
 			builder.append(splitString[i]);
 		}
 		
-		printMsg("added to " + fileName + ": \"" + builder.toString() + "\"");
+		printMsg("added to " + file.getName() + ": \"" + builder.toString() + "\"");
 		writer.write(builder.toString());
 		writer.write("\n");
 		writer.close();
 	}
 
+	// Function to delete a specific line from the text file
+	public static String functionSearch(File file, String[] splitString)
+			throws FileNotFoundException, IOException {
+		
+		String stringLine;
+		int lineCounter = 1;
+		int linesFound = 0;
+		BufferedReader br = new BufferedReader(new FileReader(file));
+		
+		// Extract out the index of the line to be deleted
+		String searchWord = splitString[1];	
+
+		// If the line number matches, ignore the line and save it into stringDeleted, else write it to the buffer
+		while ((stringLine = br.readLine()) != null) {
+			if(stringLine.contains(searchWord))
+			{
+				printMsg(lineCounter + ": " + stringLine);
+				linesFound++;
+			}
+			lineCounter ++;
+		}
+		
+		br.close();
+		
+		if(linesFound == 0)
+		{
+			return "Unable to find " + searchWord;
+		}
+		
+		return "Found " + linesFound + " instance(s) of the word " + searchWord;
+		
+
+	}
+	
 	// Function to split string by spaces and save into a string array
 	public static String[] splitStringBySpaces(String userCommand) {
 		
-		String[] splitString;
-		
-		// Split by white spaces
-		splitString = userCommand.split("\\s+");
+		String[] splitString;		
+		splitString = userCommand.split("\\s+");		
 		return splitString;
-	}
-
-
-	private static String scanLine(Scanner scanner) {
-		return scanner.nextLine();
 	}
 
 	// Function to create the file if specified does not exist
@@ -234,4 +262,15 @@ public class TextBuddy {
 	private static void printMsg(String msg) {
 		System.out.println(msg);
 	}
+
+	private static String scanLine(Scanner scanner) {
+		return scanner.nextLine();
+	}
+	
+	private static void writeFileFromBuffer(File file, StringBuffer sb) throws IOException {
+		FileWriter fw = new FileWriter(file);
+		fw.write(sb.toString());
+		fw.close();
+	}
+
 }
