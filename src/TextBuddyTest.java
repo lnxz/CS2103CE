@@ -200,6 +200,19 @@ public class TextBuddyTest {
 		
 	}
 	
+	@Test
+	public void testGetNumLines() throws IOException
+	{
+		// Preparing test file to test function
+		String fileName = "tempGetLines.txt";
+		File testFile = initTestFile(fileName);	
+		
+		// Expected output/file to compare to
+		int expectedInt = 4;
+		
+		// Check output
+		Assert.assertEquals("Output differs", expectedInt, TextBuddy.getNumLines(testFile));
+	}
 	
 	// ******************** End of Public Method tests ******************************
 
